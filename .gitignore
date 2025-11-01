@@ -53,3 +53,11 @@ dkms.conf
 
 # debug information files
 *.dwo
+
+# IDEs and editors
+.vscode/
+
+# OS based file
+*.bin
+*.img
+*.iso
