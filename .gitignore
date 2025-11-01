@@ -61,3 +61,6 @@ dkms.conf
 *.bin
 *.img
 *.iso
+
+# asm files
+bootloader_constants.asm
