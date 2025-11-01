@@ -26,17 +26,21 @@ void scroll_screen(void) {
         screen[r] = ' ';
 }
 
+void newLine(void) {
+    screen[cursorY*80+cursorX] = '\0';
+    buffer[cursorX] = '\0';
+    cursorX = 0;
+    ++cursorY;
+    if (cursorY >= 25) {
+        scroll_screen();
+        cursorY = 24;
+    }
+}
+
 void print(const char *s) {
     while (*s) {
         if (*s == '\n' || cursorX >= 79) {
-            screen[cursorY*80+cursorX] = '\0';
-            buffer[cursorX] = '\0';
-            ++cursorY;
-            cursorX = 0;
-            if (cursorY >= 25) {
-                scroll_screen();
-                cursorY = 24;
-            }
+            newLine();
             cmdCheck(buffer);
         }
         else if (*s == '\b' && cursorX >= 1) {

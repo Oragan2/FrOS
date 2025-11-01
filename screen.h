@@ -6,5 +6,6 @@ void clear_screen(void);
 void scroll_screen(void);
 void print(const char *s);
 void showScreen(void);
+void newLine(void);
 
 #endif // SCREEN_H
