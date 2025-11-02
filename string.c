@@ -18,7 +18,7 @@ size_t strlength(const char *str) {
     return len;
 }
 
-char *strcopy(char *dest, const char *src) {
+char *strcpy(char *dest, const char *src) {
     char *original_dest = dest;
     while (*src) {
         *dest++ = *src++;
