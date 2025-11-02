@@ -10,7 +10,7 @@ int strcmp(const char *str1, const char *str2) {
     return (*str1 == *str2) ? 1 : 0;
 }
 
-size_t strlength(const char *str) {
+size_t strlen(const char *str) {
     size_t len = 0;
     while (*str++) {
         ++len;
@@ -40,7 +40,7 @@ char *strconcat(char *dest, const char *src) {
 }
 
 void *strcut(const char *src, size_t n, int part, char *result) {
-    size_t rlen = strlength(src);
+    size_t rlen = strlen(src);
     if (part != 1 && part != 2) return NULL;
     if (part == 1) {
         for (size_t i = 0; i < n && src[i]; ++i) {
@@ -57,7 +57,7 @@ void *strcut(const char *src, size_t n, int part, char *result) {
 }
 
 size_t strpos(const char *haystack, const char needle) {
-    size_t hlen = strlength(haystack);
+    size_t hlen = strlen(haystack);
     if (needle == '\0') return 0;
     for (size_t i = 0; i < hlen; ++i) {
         if (haystack[i] == needle)
