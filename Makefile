@@ -25,17 +25,11 @@ kernel.o: kernel.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
 # 1. Update the dependency list for kernel.bin
-kernel.bin: kernel_entry.o kernel.o string.o screen.o cmd.o
-	$(LD) $(LDFLAGS) -o $@ kernel_entry.o kernel.o string.o screen.o cmd.o
+kernel.bin: kernel_entry.o kernel.o string.o screen.o cmd.o inputs.o
+	$(LD) $(LDFLAGS) -o $@ kernel_entry.o kernel.o string.o screen.o cmd.o inputs.o
 
 # 2. Add the compilation rules for the new source files
-string.o: string.c
-	$(CC) $(CFLAGS) -c $< -o $@
-
-screen.o: screen.c
-	$(CC) $(CFLAGS) -c $< -o $@
-
-cmd.o: cmd.c
+%.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
 # 3. Update the clean target to remove new files
