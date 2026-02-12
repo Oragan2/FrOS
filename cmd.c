@@ -1,14 +1,15 @@
 #include "cmd.h"
 #include "string.h"
 #include "screen.h"
-#define NBCMD 3
+#define NBCMD 4
 
 // Commands
 
 const char cmd_list[NBCMD][6] = {
-    "cls\0",
-    "echo\0",
-    "help\0"
+    "nty\0",
+    "ecrit\0",
+    "aide\0",
+    "prx\0"
 };
 
 // End Commands
@@ -33,14 +34,17 @@ void cmdCheck(const char *s) {
                     clear_screen();
                     return;
                 case 1: // echo
-                    print(s + 5); // 5 is length of "echo "
+                    print(s + 6); // 5 is length of "echo "
                     newLine();
                     return;
                 case 2: // help
-                    print("Available commands:\n");
-                    print(" - cls: Clear the screen\n");
-                    print(" - echo [text]: Print text to the screen\n");
-                    print(" - help: Show this help message\n");
+                    print("Commandes disponible:\n");
+                    print(" - nettoyer: nettoie l'ecran\n");
+                    print(" - ecrit [text]: affiche le texte a l'ecran\n");
+                    print(" - aide: Afficher ce message\n");
+                    return;
+                case 3:
+                    setPrefix(s+4);
                     return;
                 default:
                     return;
@@ -48,5 +52,11 @@ void cmdCheck(const char *s) {
         }
         cmdF = 0;
     }
+    if (strcmp(s, "\0")) return;
+    setColor(0x04);
+    print("Commande inconnue : ");
+    print(s);
+    print("\n");
+    setColor(0x0F);
     return;
 }

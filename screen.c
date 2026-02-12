@@ -33,7 +33,6 @@ void setPrefix(const char *s) {
     if (strlen(s) >= 5) return;
     strcpy(prefix, s);
     prefix[strlen(s)] = '\0';
-    print(prefix);
 }
 
 void setColor(unsigned short c) {
