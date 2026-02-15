@@ -39,7 +39,7 @@ void cmdCheck(const char *s) {
                     return;
                 case 2: // echo
                 case 3:
-                    print(s + strlen(cmdF);
+                    print(s + strlen(cmdF));
                     newLine();
                     return;
                 case 4: // help
