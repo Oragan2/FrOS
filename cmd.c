@@ -38,11 +38,8 @@ void cmdCheck(const char *s) {
                     clear_screen();
                     return;
                 case 2: // echo
-                    print(s + 6); // 5 is length of "echo "
-                    newLine();
-                    return;
                 case 3:
-                    print(s + 5);
+                    print(s + strlen(cmdF);
                     newLine();
                     return;
                 case 4: // help
