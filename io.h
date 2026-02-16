@@ -2,5 +2,6 @@
 #define IO_H
 
 #include "inputs.h"
+#include "output.h"
 #include "screen.h"
 #endif // IO_H
