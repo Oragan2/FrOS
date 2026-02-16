@@ -39,7 +39,7 @@ void cmdCheck(const char *s) {
                     return;
                 case 2: // echo
                 case 3:
-                    print(s + strlen(cmdF));
+                    print(s + strlen(cmdF)-1);
                     newLine();
                     return;
                 case 4: // help
@@ -47,6 +47,7 @@ void cmdCheck(const char *s) {
                     print("Commandes disponible:\n");
                     print(" - nettoyer/cls: nettoie l'ecran\n");
                     print(" - ecrit/echo [text]: affiche le texte a l'ecran\n");
+
                     print(" - aide/help: Afficher ce message\n");
                     return;
                 case 6:
