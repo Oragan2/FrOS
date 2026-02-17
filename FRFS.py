@@ -9,7 +9,8 @@ with open(oFile, "wb") as out:
     out.write((len(iFile)).to_bytes(2, 'little'))
     # reserve space for file table
     table_offset = out.tell()
-    out.write(b'\x00' * len(iFile) * 48)
+    out.write(b'\x00' * len(iFile) * 104)
+    out.write(b'\x00' * (512-((len(iFile)*104)%512)))
     data_start = out.tell()
     data_offsets = []
     for f in iFile:
@@ -17,7 +18,7 @@ with open(oFile, "wb") as out:
             data = fi.read()
         offset = (out.tell() - data_start) // 512  # in sectors
         out.write(data)
-        data_offsets.append((f, offset, len(data)))
+        data_offsets.append((f, offset, len(data)//512+1))
         pad = (-len(data)) % 512
         if pad:
             out.write(b"\x00" * pad)
@@ -28,6 +29,6 @@ with open(oFile, "wb") as out:
         out.write(name.ljust(32, b'\0'))
         out.write(offset.to_bytes(4, 'little'))
         out.write(size.to_bytes(4, 'little'))
-        out.write(b'\x00' * 8)  # reserved
+        out.write(b'\x00' * 64)  # reserved
 
             

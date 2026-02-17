@@ -4,7 +4,7 @@
 #define ATA_LBA_LOW    0x1F3
 #define ATA_LBA_MID    0x1F4
 #define ATA_LBA_HIGH   0x1F5
-#define ATA_DRIVE      0x1F6
+#define ATA_DRIVE      0x1F7
 #define ATA_COMMAND    0x1F7
 #define ATA_STATUS     0x1F7
 
