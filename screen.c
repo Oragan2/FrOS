@@ -5,7 +5,7 @@
 static char screen[25*80] = { 0 };
 static char buffer[80] = { 0 };
 static int bufferIndex = 0;
-static char prefix[5] = { 0 };
+static char prefix[5] = "> \0";
 unsigned short color = 0x0F;
 static int cursorX = 0;
 static int cursorY = 0;
@@ -20,6 +20,12 @@ void clear_screen(void) {
         print_char(' ', i);
     cursorX = 0;
     cursorY = 0;
+}
+
+void reload_screen(void) {
+	for (int i = 0; i < 24*80; ++i) {
+		print_char(screen[i], i);
+	}
 }
 
 void scroll_screen(void) {
@@ -47,6 +53,7 @@ void newLine(void) {
     ++cursorY;
     if (cursorY >= 25) {
         scroll_screen();
+	reload_screen();
         cursorY = 24;
     }
 }
