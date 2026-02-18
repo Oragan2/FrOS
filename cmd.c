@@ -2,7 +2,8 @@
 #include "string.h"
 #include "screen.h"
 #include "fs.h"
-#define NBCMD 9 
+#include "pci.h"
+#define NBCMD 10
 
 // Commands
 
@@ -15,7 +16,8 @@ const char cmd_list[NBCMD][6] = {
     "help\0",
     "ls\0",
     "cat\0",
-    "aff\0"
+    "aff\0",
+    "lspci\0"
 };
 
 // End Commands
@@ -60,7 +62,7 @@ void cmdCheck(const char *s) {
 		    }
                     return;
 		case 7: // cat
-		case 8:
+		case 8: //aff
 		    for (int i = 0; i < filesys.nbFiles; ++i) {
 			if (strcmp(s+strlen(cmd)+1,filesys.root[i].name)) {
 				char buffer[filesys.root[i].size*512];
@@ -74,8 +76,11 @@ void cmdCheck(const char *s) {
 		    print("File not found\n");
 		    setColor(0x0F);
 		    return;
-                default:
-                    return;
+            case 9: // lspci
+                pci_scan();
+                return;
+            default:
+                return;
             }
         }
         cmdF = 0;

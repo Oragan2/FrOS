@@ -33,7 +33,7 @@ kernel.o: kernel.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
 # 1. Update the dependency list for kernel.bin
-kernel.bin: kernel_entry.o kernel.o string.o screen.o cmd.o inputs.o output.o disk.o mem.o fs.o
+kernel.bin: kernel_entry.o kernel.o string.o screen.o cmd.o inputs.o output.o disk.o mem.o fs.o pci.o
 	$(LD) $(LDFLAGS) -o $@ $^
 	
 # 2. Add the compilation rules for the new source files

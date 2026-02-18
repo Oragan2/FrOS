@@ -9,5 +9,9 @@ void setColor(unsigned short c);
 void print(const char *s);
 void newLine(void);
 void keyboardPrint(const char c);
+void printHex(unsigned int n);
+void printHex16(unsigned short n);
+void printHex8(unsigned char n);
+void printNumber(unsigned int n);
 
 #endif // SCREEN_H
