@@ -34,3 +34,7 @@ void ata_read_sector(uint32_t lba, uint8_t* buffer)
     for (int i = 0; i < 256; i++)
         ((uint16_t*)buffer)[i] = inw(ATA_DATA);
 }
+
+void readSector(uint32_t lba, uint8_t buffer[512]) {
+	ata_read_sector(lba,buffer);
+}

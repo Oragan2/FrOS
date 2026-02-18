@@ -1,7 +1,8 @@
 #include "cmd.h"
 #include "string.h"
 #include "screen.h"
-#define NBCMD 7
+#include "fs.h"
+#define NBCMD 9 
 
 // Commands
 
@@ -12,7 +13,9 @@ const char cmd_list[NBCMD][6] = {
     "echo\0",
     "aide\0",
     "help\0",
-    "prx\0"
+    "ls\0",
+    "cat\0",
+    "aff\0"
 };
 
 // End Commands
@@ -50,9 +53,26 @@ void cmdCheck(const char *s) {
 
                     print(" - aide/help: Afficher ce message\n");
                     return;
-                case 6:
-                    setPrefix(s+4);
+                case 6: // ls
+                    for (int i = 0; i < filesys.nbFiles; ++i) {
+			print(filesys.root[i].name);
+			print("\n");
+		    }
                     return;
+		case 7: // cat
+		case 8:
+		    for (int i = 0; i < filesys.nbFiles; ++i) {
+			if (strcmp(s+strlen(cmd)+1,filesys.root[i].name)) {
+				char buffer[512];
+				readFile(&filesys.root[i], buffer);
+				print(buffer);
+				print("\n");
+				return;
+			}
+		    }
+		    setColor(0x04);
+		    print("File not found\n");
+		    setColor(0x0F);
                 default:
                     return;
             }

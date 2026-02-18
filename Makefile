@@ -41,7 +41,7 @@ kernel.bin: kernel_entry.o kernel.o string.o screen.o cmd.o inputs.o output.o di
 	$(CC) $(CFLAGS) -c $< -o $@
 
 # 3 Add files to the mix
-files.bin : test.txt ts.x
+files.bin : test.txt ts.x bootloader.asm
 	$(PY) $^
 
 # 4. Update the clean target to remove new files

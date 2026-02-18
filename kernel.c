@@ -1,9 +1,5 @@
 // kernel.c
-#include "string.h"
-#include "cmd.h"
 #include "io.h"
-#include "disk.h"
-#include "mem.h"
 #include "fs.h"
 #include <stdint.h>
 
@@ -11,7 +7,6 @@
 #define FRFS_MAGIC "FRFS"
 
 void kernel_main(void) {
-    struct FRFS filesys;
     clear_screen();
     if (initFRFS(&filesys)) {
 	setColor(0x04);
@@ -19,9 +14,6 @@ void kernel_main(void) {
 	setColor(0x0F);
     }
     else print ("FRFS has been properly loaded\n");
-	
-    print(filesys.root[1].name);
-    print("\n");
     print("Hello, World from Kernel!\n");
     setPrefix("> ");
     print("Started listening for keyboard input...\n");

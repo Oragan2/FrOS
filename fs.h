@@ -9,7 +9,7 @@ struct FILE {
 	uint32_t size;
 	uint8_t type;
 	uint64_t parent_id;
-} __attribute__((packed));
+} __attribute__((packed)); 
 
 struct FRFS {
 	char magic[4];
@@ -18,7 +18,9 @@ struct FRFS {
 	struct FILE root[64];
 } __attribute__((packed));
 
+extern struct FRFS filesys;
+
 int initFRFS(struct FRFS* filesys);
-char* readFile(struct FILE* file);
+void readFile(struct FILE* file, char* buffer);
 
 #endif
