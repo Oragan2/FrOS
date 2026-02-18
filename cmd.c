@@ -63,7 +63,7 @@ void cmdCheck(const char *s) {
 		case 8:
 		    for (int i = 0; i < filesys.nbFiles; ++i) {
 			if (strcmp(s+strlen(cmd)+1,filesys.root[i].name)) {
-				char buffer[512];
+				char buffer[filesys.root[i].size*512];
 				readFile(&filesys.root[i], buffer);
 				print(buffer);
 				print("\n");
@@ -73,6 +73,7 @@ void cmdCheck(const char *s) {
 		    setColor(0x04);
 		    print("File not found\n");
 		    setColor(0x0F);
+		    return;
                 default:
                     return;
             }

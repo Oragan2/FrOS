@@ -36,6 +36,18 @@ int initFRFS(struct FRFS *filesys) {
     return 0;
 }
 
-void readFile(struct FILE* file, char * buffer) {
-	readSector(LBA_OFFSET+file->startSec+1, (uint8_t*)buffer);	
+void readFile(struct FILE* file, char* buffer) {
+	if (file->size == 0) return;
+	uint8_t tmpbuffer[512];
+	int byte_read = 0;
+	int32_t ptn = file->startSec;
+	
+	for (uint32_t i = 0; i < file->size; ++i) {
+		readSector(LBA_OFFSET+ptn+1, tmpbuffer);
+		ptn = *(uint32_t*)&tmpbuffer[508];
+		for (int j = 0; j < 508; ++j) {
+			buffer[byte_read++] = (char)tmpbuffer[j];
+		}
+	}
+	buffer[byte_read] = '\0';
 }

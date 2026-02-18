@@ -23,7 +23,7 @@ void clear_screen(void) {
 }
 
 void reload_screen(void) {
-	for (int i = 0; i < 24*80; ++i) {
+	for (int i = 0; i < 25*80; ++i) {
 		print_char(screen[i], i);
 	}
 }

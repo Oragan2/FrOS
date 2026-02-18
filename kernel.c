@@ -15,7 +15,6 @@ void kernel_main(void) {
     }
     else print ("FRFS has been properly loaded\n");
     print("Hello, World from Kernel!\n");
-    setPrefix("> ");
     print("Started listening for keyboard input...\n");
     print("");
     while (1) {
