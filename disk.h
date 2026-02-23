@@ -4,5 +4,6 @@
 
 static void ata_wait();
 void readSector(uint32_t lba, uint8_t* buffer);
+void writeSector(uint32_t lba, uint8_t* buffer);
 
 #endif

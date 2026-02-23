@@ -27,6 +27,7 @@ with open(oFile, "wb") as out:
         if pad:
             out.write(b"\x00" * pad)
     # go back and write file table
+    out.write(b'\x00'*2048)
     out.seek(table_offset)
     for (name, offset, size) in data_offsets:
         name = name.encode("ascii")[:31] + b'\0'

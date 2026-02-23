@@ -1,13 +1,12 @@
 #include "string.h"
 
 int strcmp(const char *str1, const char *str2) {
-    while (*str1 && *str2) {
-        if (*str1 != *str2)
-            return 0;
-        ++str1;
-        ++str2;
+    int ret = 0;
+    while (*str1++ && *str2++) {
+    	if (*str1 < *str2) ret = 1;
+	else if (*str1 > *str2) ret = -1;
     }
-    return (*str1 == *str2) ? 1 : 0;
+    return ret;
 }
 
 size_t strlen(const char *str) {
@@ -39,9 +38,9 @@ char *strconcat(char *dest, const char *src) {
     return original_dest;
 }
 
-void *strcut(const char *src, size_t n, int part, char *result) {
+void strcut(const char *src, size_t n, int part, char *result) {
     size_t rlen = strlen(src);
-    if (part != 1 && part != 2) return NULL;
+    if (part != 1 && part != 2) return;
     if (part == 1) {
         for (size_t i = 0; i < n && src[i]; ++i) {
             result[i] = src[i];

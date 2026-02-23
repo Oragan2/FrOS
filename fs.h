@@ -19,8 +19,12 @@ struct FRFS {
 } __attribute__((packed));
 
 extern struct FRFS filesys;
+extern uint8_t freeSector[512];
 
 int initFRFS(struct FRFS* filesys);
 void readFile(struct FILE* file, char* buffer);
+void saveFile(const char * name);
+void writeFile(struct FILE* file, const char* data);
+struct FILE* findFile(const char * filename);
 
 #endif
