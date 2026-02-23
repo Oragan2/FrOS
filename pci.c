@@ -20,10 +20,11 @@ void pci_scan(void) {   //scans all PCI devices. Can be modified to find a speci
                     unsigned char subclass = pci_get_subclass(bus, device, function);
                     unsigned char prog_if = pci_get_prog_if(bus, device, function);
                     unsigned int bar0 = pci_get_bar0(bus, device, function);
-                    if(class_code == 0x0C) { // USB controller
-                        print("Found usb controller : \n");
+                    //if(class_code == 0x0C) { // USB controller
+                        print("Found pci port : \n");
                         pci_print(bus, device, function, vendor, device_id, class_code, subclass, prog_if, bar0);
-                    }
+                        newLine();
+                    //}
                 }
             }
         }

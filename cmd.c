@@ -3,7 +3,9 @@
 #include "screen.h"
 #include "fs.h"
 #include "pci.h"
-#define NBCMD 10
+#include "mem.h"
+
+#define NBCMD 11
 
 // Commands
 
@@ -17,7 +19,8 @@ const char cmd_list[NBCMD][6] = {
     "ls\0",
     "cat\0",
     "aff\0",
-    "lspci\0"
+    "lspci\0",
+    "lsmem\0"
 };
 
 // End Commands
@@ -61,23 +64,34 @@ void cmdCheck(const char *s) {
 			print("\n");
 		    }
                     return;
-		case 7: // cat
-		case 8: //aff
-		    for (int i = 0; i < filesys.nbFiles; ++i) {
-			if (strcmp(s+strlen(cmd)+1,filesys.root[i].name)) {
-				char buffer[filesys.root[i].size*512];
-				readFile(&filesys.root[i], buffer);
-				print(buffer);
-				print("\n");
-				return;
-			}
-		    }
+		    case 7: // cat
+		    case 8: //aff
+		        for (int i = 0; i < filesys.nbFiles; ++i) {
+			        if (strcmp(s+strlen(cmd)+1,filesys.root[i].name)) {
+				        char buffer[filesys.root[i].size*512];
+    				    readFile(&filesys.root[i], buffer);
+	    			    print(buffer);
+		    		    print("\n");
+			    	    return;
+			        }
+		        }
 		    setColor(0x04);
 		    print("File not found\n");
 		    setColor(0x0F);
 		    return;
             case 9: // lspci
                 pci_scan();
+                return;
+            case 10: // memcheck
+                if (memcheck((void*)0x80, 0x100000)) {
+                    setColor(0x04);
+                    print("Memory check failed\n");
+                    setColor(0x0F);
+                } else {
+                    setColor(0x02);
+                    print("Memory check passed\n");
+                    setColor(0x0F);
+                }
                 return;
             default:
                 return;

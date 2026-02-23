@@ -15,3 +15,26 @@ int memcmp(void * c1, void * c2, unsigned int size) {
 	}
 	return retVal;
 }
+
+int memcheck(void * address, unsigned int size) {
+	for (unsigned int i = 0; i < size; ++i) {
+		if (((uint8_t*)address)[i] != 0) return 1;
+	}
+	return 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
