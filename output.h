@@ -8,15 +8,12 @@ static inline void outb(uint16_t port, uint8_t val)
     __asm__ volatile ("outb %0, %1" : : "a"(val), "Nd"(port));
 }
 
-<<<<<<< HEAD
 static inline void outl(uint16_t port, uint32_t val)
 {
     __asm__ volatile ("outl %0, %1" : : "a"(val), "Nd"(port));
-=======
+}
 static inline void outw(uint16_t port, uint16_t val) 
 {
 	__asm__ volatile ("outw %0, %1" : : "a"(val), "Nd"(port));
->>>>>>> eb14a02 (For pulling)
 }
-
 #endif
