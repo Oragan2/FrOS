@@ -36,7 +36,7 @@ int initFRFS(struct FRFS *filesys) {
     }
     // initialise what's needed
     strcpy(filesys->magic, "FRFS");
-    filesys->nbFiles = *(uint16_t*)&buffer[6];
+    memcpy(&filesys->nbFiles, &buffer[6], sizeof(uint16_t));
     filesys->version = *(uint16_t*)&buffer[4];
 
     uint8_t* file_ptr = buffer + 8; 
