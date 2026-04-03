@@ -71,7 +71,6 @@ start:
     cli
     mov eax, cr0
     or eax, 1
-    mov cr0, eax
 
     ; far jump into PM and run pm_test stub
     jmp 0x08:0x1000
