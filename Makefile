@@ -25,11 +25,14 @@ bootloader.bin: bootloader.asm bootloader_constants.asm
 kernel_entry.o: kernel_entry.asm
 	$(AS) -f elf32 $< -o $@
 
+switch.o: switch.asm
+	$(AS) -f elf32 $< -o $@
+
 kernel.o: kernel.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
 # 1. Update the dependency list for kernel.bin
-kernel.bin: kernel_entry.o kernel.o string.o screen.o cmd.o inputs.o output.o disk.o mem.o fs.o pci.o
+kernel.bin: kernel_entry.o kernel.o string.o screen.o cmd.o inputs.o output.o disk.o mem.o fs.o pci.o pit.o idt.o process.o switch.o
 	$(LD) $(LDFLAGS) -o $@ $^
 	
 # 2. Add the compilation rules for the new source files
@@ -45,4 +48,4 @@ clean:
 	rm -f *.bin *.o os.img bootloader_constants.asm
 
 run:
-	qemu-system-i386 -drive format=raw,file=os.img -boot a
+	qemu-system-i386 -drive format=raw,file=os.img -boot a -nodefaults -vga std -device qemu-xhci,id=usb -device usb-kbd -device usb-tablet -display gtk
