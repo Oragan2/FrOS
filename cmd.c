@@ -5,11 +5,11 @@
 #include "pci.h"
 #include "mem.h"
 
-#define NBCMD 11
+#define NBCMD 13 
 
 // Commands
 
-const char cmd_list[NBCMD][6] = {
+const char cmd_list[NBCMD][7] = {
     "nty\0",
     "cls\0",
     "ecrit\0",
@@ -21,6 +21,8 @@ const char cmd_list[NBCMD][6] = {
     "aff\0",
     "lspci\0",
     "lsmem\0"
+    "touch\0",
+    "nvf\0",
 };
 
 // End Commands
@@ -39,7 +41,7 @@ void cmdCheck(const char *s) {
         else {
             cmdF = strcmp(cmd, cmd_list[i]);
         }
-        if (cmdF) {
+        if (!cmdF) {
             switch (i) {
                 case 0: // cls
                 case 1: //also cls
@@ -47,8 +49,28 @@ void cmdCheck(const char *s) {
                     return;
                 case 2: // echo
                 case 3:
-                    print(s + strlen(cmd)+1);
-                    newLine();
+		    int a = strpos(s+strlen(cmd)+1, '>'); 
+		    if (a == -1) {
+                    	print(s + strlen(cmd)+1);
+                    	newLine();
+		    }
+		    else {
+			const char *filename = s+strlen(cmd)+2+a;
+			print(filename);
+			print("\n");
+			char* text;
+			strcut(s+strlen(cmd)+1,a-1,1,text);
+			struct FILE* f = findFile(filename);
+			if (f == NULL) {
+				setColor(0x04);
+				print("File '");
+				print(filename);
+				print("' not found\n");
+				setColor(0x0F);
+				return;
+			}
+			writeFile(f,text);
+		    }
                     return;
                 case 4: // help
                 case 5:
@@ -64,17 +86,17 @@ void cmdCheck(const char *s) {
 			print("\n");
 		    }
                     return;
-		    case 7: // cat
-		    case 8: //aff
-		        for (int i = 0; i < filesys.nbFiles; ++i) {
-			        if (strcmp(s+strlen(cmd)+1,filesys.root[i].name)) {
-				        char buffer[filesys.root[i].size*512];
-    				    readFile(&filesys.root[i], buffer);
-	    			    print(buffer);
-		    		    print("\n");
-			    	    return;
-			        }
-		        }
+		case 7: // cat
+		case 8:
+		    struct FILE* f = findFile(s+strlen(cmd)+1);
+		    if (f != NULL) 
+		    {
+			    char buffer[f->size*512];
+			    readFile(f, buffer);
+			    if (*buffer)
+			    	print(buffer);
+			    return;
+		    }
 		    setColor(0x04);
 		    print("File not found\n");
 		    setColor(0x0F);
@@ -93,13 +115,17 @@ void cmdCheck(const char *s) {
                     setColor(0x0F);
                 }
                 return;
+		    case 11: // touch
+		    case 12:
+		        saveFile(s+strlen(cmd)+1);
+                return;
             default:
                 return;
             }
         }
         cmdF = 0;
     }
-    if (strcmp(s, "\0")) return;
+    if (!strcmp(s, "\0")) return;
     setColor(0x04);
     print("Commande inconnue : ");
     print(s);

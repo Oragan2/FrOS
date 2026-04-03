@@ -83,6 +83,7 @@ void print(const char *s) {
 
 void keyboardPrint(char c) {
     if (c == '\n' || cursorX >= 79) {
+	buffer[cursorX] = '\0';
         newLine();
         cmdCheck(buffer);
         print(prefix);

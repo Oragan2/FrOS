@@ -10,13 +10,9 @@ LDFLAGS = -Ttext 0x1000 --oformat binary -m elf_i386 -e kernel_entry
 all: os.img
 
 os.img: bootloader.bin kernel.bin files.bin
-	# 1. Create a blank 1MB image (adjust size as needed)
 	dd if=/dev/zero of=os.img bs=512 count=2048
-	# 2. Place the bootloader at the very start
 	dd if=bootloader.bin of=os.img conv=notrunc
-	# 3. Place the kernel at LBA 1 (byte 512)
 	dd if=kernel.bin of=os.img bs=512 seek=1 conv=notrunc
-	# 4. Place your FS at a FIXED LBA (e.g., LBA 50)
 	dd if=files.bin of=os.img bs=512 seek=50 conv=notrunc
 
 # Automatically generate kernel size constant
