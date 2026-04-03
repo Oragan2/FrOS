@@ -1,6 +1,10 @@
 #include "mem.h"
 #include <stdint.h>
 
+static unsigned char heap[0x100000];
+static unsigned int heap_ptr = 0;
+unsigned char phys_bitmap[MAX_FRAMES/8];
+
 void memcpy(void * dest, void * from, unsigned int size) {
 	for (unsigned int i = 0; i < size; ++i) {
 		((uint8_t*)dest)[i] = ((uint8_t*)from)[i];
@@ -38,3 +42,12 @@ int memcheck(void * address, unsigned int size) {
 
 
 
+=======
+void* kmalloc(unsigned int size) {
+    size = (size + 3) & ~3;
+    if (heap_ptr + size > sizeof(heap)) return 0;
+    void * ptr = &heap[heap_ptr];
+    heap_ptr += size;
+    return ptr;
+}
+>>>>>>> 06bea55 (Added a kmalloc function)
