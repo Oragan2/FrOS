@@ -22,6 +22,14 @@ void idt_init() {
         idt_set_gate(i,0,0,0);
     }
 
+    for (int i = 0; i < 256; i++) {
+        extern void exception_handler(void);
+        idt_set_gate(i, (uint32_t)exception_handler, 0x08, 0x8E);
+    }
+
+    extern void irq0_stub(void);
+    idt_set_gate(32, (uint32_t)irq0_stub, 0x08, 0x8E);
+
     extern void idt_load(struct IDTPtr*);
     idt_load(&idt_ptr);
 }

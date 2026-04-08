@@ -7,19 +7,25 @@
 #include "pic.h"
 #include "pit.h"
 
-#define FS_START_LBA 9 
 #define FRFS_MAGIC "FRFS"
 
 extern void irq0_stub();
 
 void kernel_main(void) {
-    pic_remap();
+    *((char*)0xB8004) = '1'; // Breadcrumb 1
     idt_init();
 
+    *((char*)0xB8004) = '2'; // Breadcrumb 1
     idt_set_gate(32, (uint32_t)irq0_stub, 0x08, 0x8E); // IRQ0 = interrupt 32
     
+    *((char*)0xB8004) = '3'; // Breadcrumb 1
+    pic_remap();
+    *((char*)0xB8004) = '4'; // Breadcrumb 1
+    __asm__ volatile("sti");
+    *((char*)0xB8004) = '5'; // Breadcrumb 1
     pit_init();
-
+    *((char*)0xB8004) = '6'; // Breadcrumb 1
+    
     clear_screen();
     if (initFRFS(&filesys)) {
 	setColor(0x04);
@@ -30,8 +36,8 @@ void kernel_main(void) {
     print("Hello, World from Kernel!\n");
     print("Started listening for keyboard input...\n");
     print("");
+    __asm__ volatile("cli"); // Disable interrupts
     pci_scan();
-    while (1) {
-        keyboard_handler();
-    }
+    __asm__ volatile("sti"); // Re-enable interrupts
+    while (1) {__asm__ volatile("hlt");}
 }

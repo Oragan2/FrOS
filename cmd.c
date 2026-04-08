@@ -3,13 +3,9 @@
 #include "screen.h"
 #include "fs.h"
 #include "pci.h"
-<<<<<<< HEAD
 #include "mem.h"
 
 #define NBCMD 13 
-=======
-#define NBCMD 11
->>>>>>> fc53a44 (Finale resovle)
 
 // Commands
 
@@ -23,12 +19,8 @@ const char cmd_list[NBCMD][7] = {
     "ls\0",
     "cat\0",
     "aff\0",
-<<<<<<< HEAD
     "lspci\0",
-    "lsmem\0"
-=======
-    "lspci\0"
->>>>>>> fc53a44 (Finale resovle)
+    "lsmem\0",
     "touch\0",
     "nvf\0",
 };
@@ -109,7 +101,6 @@ void cmdCheck(const char *s) {
 		    print("File not found\n");
 		    setColor(0x0F);
 		    return;
-<<<<<<< HEAD
             case 9: // lspci
                 pci_scan();
                 return;
@@ -128,18 +119,8 @@ void cmdCheck(const char *s) {
 		    case 12:
 		        saveFile(s+strlen(cmd)+1);
                 return;
-            default:
-                return;
-=======
-        case 9: // lspci
-            pci_scan();
-            return;
-        case 10: // touch
-		case 11:
-		    saveFile(s+strlen(cmd)+1);
         default:
             return;
->>>>>>> fc53a44 (Finale resovle)
             }
         }
         cmdF = 0;

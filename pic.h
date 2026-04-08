@@ -17,8 +17,8 @@ static inline void pic_remap() {
     outb(PIC2_DATA, 0x02);
     outb(PIC1_DATA, 0x01);
     outb(PIC2_DATA, 0x01);
-    outb(PIC1_DATA, 0x00);
-    outb(PIC2_DATA, 0x00);
+    outb(PIC1_DATA, 0xFE);
+    outb(PIC2_DATA, 0xFF);
 }
 
 static inline void pic_send_eoi(uint8_t irq) {

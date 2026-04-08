@@ -3,7 +3,14 @@
 extern pit_handler
 global irq0_stub
 irq0_stub:
-    pusha
+    pushad
     call pit_handler
-    popa
-    iret
+    popad
+    iretd
+
+global exception_handler
+exception_handler:
+    mov al, 'E'          ; Display 'E' for Exception
+    mov ah, 0x4F         ; Red background, White text
+    mov [0xB8000], ax    ; Print to top-left of screen
+    jmp $

@@ -12,7 +12,7 @@ static int cursorY = 0;
 
 void print_char(unsigned char c, int pos) {
     volatile unsigned short *vga = (volatile unsigned short *)0xB8000;
-    vga[pos] = (unsigned short)((((unsigned short)color) << 8) | (unsigned short)c);
+    vga[pos] = (unsigned short)((0x0F << 8) | (unsigned short)c);
 }
 
 void clear_screen(void) {

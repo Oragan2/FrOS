@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 
+
 enum State {
     READY,
     RUNNING,
@@ -12,10 +13,12 @@ enum State {
 
 struct Process {
     uint32_t *esp;
-    uint32_t rip;
+    uint32_t eip;
     uint8_t *kstack;
     uint32_t pid;
-    State state;
+    enum State state;
 };
+
+void newProcess(void func(void));
 
 #endif

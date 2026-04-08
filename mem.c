@@ -27,22 +27,6 @@ int memcheck(void * address, unsigned int size) {
 	return 0;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-=======
 void* kmalloc(unsigned int size) {
     size = (size + 3) & ~3;
     if (heap_ptr + size > sizeof(heap)) return 0;
@@ -50,4 +34,3 @@ void* kmalloc(unsigned int size) {
     heap_ptr += size;
     return ptr;
 }
->>>>>>> 06bea55 (Added a kmalloc function)

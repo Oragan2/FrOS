@@ -14,17 +14,17 @@ void pci_scan(void) {   //scans all PCI devices. Can be modified to find a speci
         for(unsigned char device = 0;device < 32; device++) {
             for(unsigned char function = 0; function < 8; function++) {
                 unsigned short vendor = pci_get_vendor(bus, device, function);
-                if (vendor != 0xFFFF) {
+                if (vendor != 0xFFFF) { 
                     unsigned short device_id = pci_get_device(bus, device, function);
                     unsigned char class_code = pci_get_class(bus, device, function);
                     unsigned char subclass = pci_get_subclass(bus, device, function);
                     unsigned char prog_if = pci_get_prog_if(bus, device, function);
                     unsigned int bar0 = pci_get_bar0(bus, device, function);
-                    //if(class_code == 0x0C) { // USB controller
+                    if(class_code == 0x0C) { // USB controller
                         print("Found pci port : \n");
                         pci_print(bus, device, function, vendor, device_id, class_code, subclass, prog_if, bar0);
                         newLine();
-                    //}
+                    }
                 }
             }
         }
