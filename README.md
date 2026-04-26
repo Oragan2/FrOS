@@ -3,7 +3,7 @@ A custom operating system and kernel made for fun in 32-bits from scrathch
 
 Current feature
 | Feature | Status |
---------------------
+| ------- | ------ |
 | Screen | ✅ |
 | Basic keyboard | ✅ |
 | File systeme | 🟠 |
