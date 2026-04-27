@@ -4,7 +4,7 @@ CC = $(CROSS)-gcc
 LD = $(CROSS)-ld
 PY = python3 FRFS.py files.bin
 
-CFLAGS = -ffreestanding -m32 -nostdlib -O2
+CFLAGS = -ffreestanding -m32 -nostdlib -O2 -fno-pic
 LDFLAGS = -T linker.ld -m elf_i386 -Map=kernel.map
 
 QEMU = qemu-system-i386
