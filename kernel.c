@@ -31,6 +31,7 @@ void kernel_main(void) {
     __asm__ volatile("sti"); // enable interrupts
 
     #ifdef TESTING
+    	debug_println("[BOOT] BOOT ENDED EXITING");
 	outl(0xF4,0);
     #endif
 
