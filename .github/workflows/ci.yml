@@ -3,6 +3,9 @@ on: [push, pull_request]
 
 jobs:
   build-and-test:
+    permissions:
+      contents: read
+      pull-requests: write
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -17,7 +20,7 @@ jobs:
             python3
 
       - name: Build
-        run: make ci CROSS=i686-linux-gnu
+        run: make ci CROSS=i686-linux-gnu CFLAGS="-ffreestanding -m32 -nostdlib -O2 -fno-pic"
 
       - name: Show boot log
         if: always()
