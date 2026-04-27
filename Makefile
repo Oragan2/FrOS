@@ -7,6 +7,9 @@ PY = python3 FRFS.py files.bin
 CFLAGS = -ffreestanding -m32 -nostdlib -O2
 LDFLAGS = -T linker.ld -m elf_i386 -Map=kernel.map
 
+QEMU = qemu-system-i386
+QEMU_BASE = -drive format=raw,file=os.img -boot a -nodefaults -vga std
+
 all: os.img
 
 os.img: bootloader.bin kernel.bin files.bin
@@ -26,7 +29,7 @@ kernel.o: kernel.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
 # 1. Update the dependency list for kernel.bin
-kernel.bin: kernel_entry.o kernel.o string.o screen.o cmd.o inputs.o output.o disk.o mem.o fs.o pci.o pit.o idt.o switch.o idt_asm.o irq_stubs.o
+kernel.bin: kernel_entry.o kernel.o string.o screen.o cmd.o inputs.o output.o disk.o mem.o fs.o pci.o pit.o idt.o switch.o idt_asm.o irq_stubs.o debug.o
 	$(LD) $(LDFLAGS) -o $@ $^
 	
 # 2. Add the compilation rules for the new source files
@@ -40,9 +43,24 @@ kernel.bin: kernel_entry.o kernel.o string.o screen.o cmd.o inputs.o output.o di
 files.bin : test.txt ts.x bootloader.asm
 	$(PY) $^
 
-# 4. Update the clean target to remove new files
+test-build:
+	$(MAKE) CFLAGS="$(CFLAGS) -DTESTING" all
+
+ci: test-build test
+
 clean:
 	rm -f *.bin *.o os.img bootloader_constants.asm
 
 run:
-	qemu-system-i386 -drive format=raw,file=os.img -boot a -nodefaults -vga std -device qemu-xhci,id=usb -device usb-kbd -device usb-tablet -display gtk
+	$(QEMU) $(QEMU_BASE) \
+	  -device qemu-xhci,id=usb -device usb-kbd -device usb-tablet \
+	  -display gtk
+
+test:
+	$(QEMU) $(QEMU_BASE) \
+	  -display none \
+	  -debugcon stdio \
+	  -device isa-debug-exit,iobase=0xf4,iosize=0x04 \
+	  > boot.log 2>&1; \
+	[ $$? -eq 1 ] || exit 1   # isa-debug-exit(0) → QEMU exits 1
+	grep -q "\[OK\] BOOT COMPLETE" boot.log

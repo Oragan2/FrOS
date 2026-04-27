@@ -1,0 +1,37 @@
+name: CI
+on: [push, pull_request]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: sudo apt-get install -y qemu-system-x86 nasm gcc make
+
+      - name: Build (test mode)
+        run: make CFLAGS="-DTESTING" all
+
+      - name: Boot test
+        run: |
+          qemu-system-i386 \
+            -drive format=raw,file=os.img -boot a \
+            -nodefaults -vga std \
+            -display none \
+            -debugcon stdio \
+            -device isa-debug-exit,iobase=0xf4,iosize=0x04 \
+            2>&1 | tee boot.log
+          [ $? -eq 1 ] || exit 1
+          grep -q "\[OK\] BOOT COMPLETE" boot.log
+
+      - name: Show boot log
+        if: always()
+        run: cat boot.log
+
+      - name: Upload log on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: boot-log
+          path: boot.log

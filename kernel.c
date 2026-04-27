@@ -6,38 +6,33 @@
 #include "idt.h"
 #include "pic.h"
 #include "pit.h"
-
-#define FRFS_MAGIC "FRFS"
+#include "debug.h"
 
 extern void irq0_stub();
 
 void kernel_main(void) {
-    *((char*)0xB8004) = '1'; // Breadcrumb 1
+    debug_println("[BOOT] IDT init");
     idt_init();
-
-    *((char*)0xB8004) = '2'; // Breadcrumb 1
     idt_set_gate(32, (uint32_t)irq0_stub, 0x08, 0x8E); // IRQ0 = interrupt 32
     
-    *((char*)0xB8004) = '3'; // Breadcrumb 1
+    debug_println("[BOOT] PIC remap"); 
     pic_remap();
-    *((char*)0xB8004) = '4'; // Breadcrumb 1
-    __asm__ volatile("sti");
-    *((char*)0xB8004) = '5'; // Breadcrumb 1
     pit_init();
-    *((char*)0xB8004) = '6'; // Breadcrumb 1
     
     clear_screen();
     if (initFRFS(&filesys)) {
-	setColor(0x04);
-	print("FRFS has failed to properly load\n");
-	setColor(0x0F);
+    	debug_println("[FAIL] FRFS load failed");   
     }
-    else print ("FRFS has been properly loaded\n");
-    print("Hello, World from Kernel!\n");
+    else debug_println("[OK] FRFS loaded");
+    debug_println("[OK] BOOT COMPLETE");
     print("Started listening for keyboard input...\n");
     print("");
-    __asm__ volatile("cli"); // Disable interrupts
     pci_scan();
-    __asm__ volatile("sti"); // Re-enable interrupts
+    __asm__ volatile("sti"); // enable interrupts
+
+    #ifdef TESTING
+	outl(0xF4,0);
+    #endif
+
     while (1) {__asm__ volatile("hlt");}
 }
