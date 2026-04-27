@@ -19,7 +19,6 @@ void kernel_main(void) {
     pic_remap();
     pit_init();
     
-    clear_screen();
     if (initFRFS(&filesys)) {
     	debug_println("[FAIL] FRFS load failed");   
     }
@@ -32,6 +31,8 @@ void kernel_main(void) {
     	debug_println("[BOOT] BOOT ENDED EXITING");
 	outl(0xF4,0);
     #endif
-
+    #ifndef TESTING
+	clear_screen();
+    #endif
     while (1) {__asm__ volatile("hlt");}
 }
