@@ -8,22 +8,16 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Install dependencies
-        run: sudo apt-get install -y qemu-system-x86 nasm gcc make
-
-      - name: Build (test mode)
-        run: make CFLAGS="-DTESTING" all
-
-      - name: Boot test
         run: |
-          qemu-system-i386 \
-            -drive format=raw,file=os.img -boot a \
-            -nodefaults -vga std \
-            -display none \
-            -debugcon stdio \
-            -device isa-debug-exit,iobase=0xf4,iosize=0x04 \
-            2>&1 | tee boot.log
-          [ $? -eq 1 ] || exit 1
-          grep -q "\[OK\] BOOT COMPLETE" boot.log
+          sudo apt-get update
+          sudo apt-get install -y \
+            gcc-i686-linux-gnu \
+            nasm \
+            qemu-system-x86 \
+            python3
+
+      - name: Build
+        run: make ci CROSS=i686-linux-gnu
 
       - name: Show boot log
         if: always()
