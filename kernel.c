@@ -25,8 +25,8 @@ void kernel_main(void) {
     }
     else debug_println("[OK] FRFS loaded");
     debug_println("[OK] BOOT COMPLETE");
-    print("Started listening for keyboard input...\n");
-    print("");
+    //print("Started listening for keyboard input...\n");
+    //print("");
     pci_scan();
     __asm__ volatile("sti"); // enable interrupts
 
