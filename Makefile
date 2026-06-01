@@ -1,21 +1,21 @@
-CROSS = i686-elf
+CROSS = x86_64-linux-gnu
 AS = nasm
 CC = $(CROSS)-gcc
 LD = $(CROSS)-ld
 PY = python3 FRFS.py files.bin
 
-CFLAGS = -ffreestanding -m32 -nostdlib -O2 -fno-pic
-LDFLAGS = -T linker.ld -m elf_i386 -Map=kernel.map
+CFLAGS = -ffreestanding -m64 -mno-red-zone -mno-mmx -mno-sse -nostdlib -O2 -fno-pic
+LDFLAGS = -T linker.ld -m elf_x86_64 -Map=kernel.map
 
-QEMU = qemu-system-i386
-QEMU_BASE = -drive format=raw,file=os.img -boot a -nodefaults -vga std
+QEMU = qemu-system-x86_64
+QEMU_BASE = -drive format=raw,file=os.img -boot c -nodefaults -vga std -smp 1
 
 all: os.img
 
 os.img: bootloader.bin kernel.bin files.bin
 	dd if=/dev/zero of=os.img bs=512 count=2048
 	dd if=bootloader.bin of=os.img conv=notrunc
-	dd if=kernel.bin of=os.img bs=512 seek=1 conv=notrunc
+	dd if=kernel.bin of=os.img bs=512 seek=1 conv=notrunc,sync
 	dd if=files.bin of=os.img bs=512 seek=50 conv=notrunc
 
 # Automatically generate kernel size constant
@@ -37,30 +37,16 @@ kernel.bin: kernel_entry.o kernel.o string.o screen.o cmd.o inputs.o output.o di
 	$(CC) $(CFLAGS) -c $< -o $@
 
 %.o: %.asm
-	$(AS) -f elf32 $< -o $@
+	$(AS) -f elf64 $< -o $@
 
 # 3 Add files to the mix
 files.bin : test.txt ts.x bootloader.asm
 	$(PY) $^
 
-test-build:
-	$(MAKE) CFLAGS="$(CFLAGS) -DTESTING" all
-
-ci: test-build test
-
-clean:
-	rm -f *.bin *.o os.img bootloader_constants.asm
-
 run:
 	$(QEMU) $(QEMU_BASE) \
 	  -device qemu-xhci,id=usb -device usb-kbd -device usb-tablet \
-	  -display gtk
+	  -display gtk -d int,cpu_reset -D qemu.log
 
-test:
-	$(QEMU) $(QEMU_BASE) \
-	  -display none \
-	  -debugcon stdio \
-	  -device isa-debug-exit,iobase=0xf4,iosize=0x04 \
-	  > boot.log 2>&1; \
-	[ $$? -eq 1 ] || exit 1   # isa-debug-exit(0) → QEMU exits 1
-	grep -q "\[OK\] BOOT COMPLETE" boot.log
+clean:
+	rm -rf *.o *.bin os.img

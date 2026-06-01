@@ -1,1 +1,1 @@
-kernel_size dw 7697
+kernel_size dw 9255
