@@ -6,10 +6,10 @@ SECTIONS
     . = 0x7E00;
 
     .text : {
-	*(.entry)
-	*(.text)
+    	*(.text)
     }
 
+    .rodata : { *(.rodata*) }
     .data : { *(.data) }
     .bss : { *(.bss) }
 }

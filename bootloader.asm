@@ -46,8 +46,13 @@ start:
     call print_string
     jmp disk_error.hang
 .ok_sectors:
-    mov cx, ax
-    mov al, 1
+    mov di, ax
+    xor ax, ax
+    mov es, ax
+    mov bx, 0x7E00
+
+    mov ch, 0
+    mov dh, 0
     mov cl, 2
 
 .read_loop:
@@ -56,15 +61,12 @@ start:
     mov ah, 0x02
     mov al, 1 
     mov dl, [BOOT_DRIVE]
-    xor dh, dh
-
     int 0x13 
     jc disk_error
 
-    mov ax, es
-    add ax, 0x0020
-    mov es, ax
+    add bx, 512
 
+    pop cx
     inc cl
     cmp cl, 18 
     jbe .next_sector
@@ -72,8 +74,8 @@ start:
     inc dh 
 
 .next_sector:
-    pop cx
-    loop .read_loop
+    dec di
+    jnz .read_loop
         
     mov si, msg_loaded	
     call print_string
@@ -99,6 +101,7 @@ start:
 [BITS 32]
 pm_entry:
     ; Instantly refresh all segment selectors to use our 32-bit Data Descriptor (0x10)
+    cli
     mov ax, 0x10
     mov ds, ax
     mov es, ax
@@ -107,7 +110,10 @@ pm_entry:
     mov ss, ax
     
     ; Update stack pointer to handle 32-bit execution boundaries
-    mov esp, 0x90000             
+    mov esp, 0x7C00
+
+    xor eax, eax
+    xor ebx, ebx             
 
     ; Jump directly to the loaded kernel's entry point address!
     jmp 0x7E00

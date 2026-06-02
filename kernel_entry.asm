@@ -4,6 +4,7 @@ section .entry
 global _start
 _start:
     ; 1. Fix up 32-bit data segments right upon landing from bootloader
+    cli
     mov ax, 0x10
     mov ds, ax
     mov ss, ax
