@@ -11,7 +11,7 @@ extern void irq0_stub();
 
 void kernel_main(void) {
     idt_init();
-    idt_set_gate(32, (uint32_t)irq0_stub, 0x08, 0x8E); // IRQ0 = interrupt 32
+    idt_set_gate(32, (uint64_t)irq0_stub, 0x18, 0x8E); // IRQ0 = interrupt 32
     
     pic_remap();
     pit_init();
@@ -23,7 +23,5 @@ void kernel_main(void) {
     pci_scan();
     __asm__ volatile("sti"); // enable interrupts
 
-	outl(0xF4,0);
-	clear_screen();
     while (1) {__asm__ volatile("hlt");}
 }

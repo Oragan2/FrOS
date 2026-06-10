@@ -6,17 +6,19 @@
 struct IDTEntry {
     uint16_t offset_low;
     uint16_t selector;
-    uint8_t zero;
+    uint8_t ist;
     uint8_t type_attr;
-    uint16_t offset_high;
+    uint16_t offset_mid;
+    uint32_t offset_high;
+    uint32_t reserved;
 } __attribute__((packed));
 
 struct IDTPtr {
     uint16_t limit;
-    uint32_t base;
+    uint64_t base;
 } __attribute((packed));
 
 void idt_init();
-void idt_set_gate(uint8_t num, uint32_t handler, uint16_t selector, uint8_t flags);
+void idt_set_gate(uint8_t num, uint64_t handler, uint16_t selector, uint8_t flags);
 
 #endif

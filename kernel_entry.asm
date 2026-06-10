@@ -16,7 +16,7 @@ _start:
     ; 2. Build identity page tables dynamically (Safe at 0x1000)
     mov edi, 0x1000
     xor eax, eax
-    mov ecx, 3072
+    mov ecx, 4096
     rep stosd
 
     mov dword [0x1000], 0x2003
@@ -27,6 +27,7 @@ _start:
     mov eax, 0x00000003
 .loop_page_table:
     mov [edi], eax
+    mov dword [edi + 4], 0
     add eax, 0x1000
     add edi, 8
     cmp eax, 0x200000

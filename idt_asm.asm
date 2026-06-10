@@ -1,8 +1,6 @@
-[BITS 32]
+[BITS 64]
 
 global idt_load
 idt_load:
-    mov eax, [esp+4]
-    lidt [eax]
-    sti
+    lidt [rdi]
     ret

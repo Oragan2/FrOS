@@ -7,7 +7,7 @@
 #define PIT_CH0 0x40
 #define PIT_HZ 100 // 100Hz = 10ms tick
 
-static uint32_t tick = 0;
+static uint64_t tick = 0;
 
 void pit_handler() {
     ++tick;

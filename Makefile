@@ -5,7 +5,7 @@ LD = $(CROSS)-ld
 PY = python3 FRFS.py files.bin
 
 CFLAGS = -ffreestanding -m64 -mno-red-zone -mno-mmx -mno-sse -nostdlib -O2 -fno-pic
-LDFLAGS = -T linker.ld -m elf_x86_64 -Map=kernel.map
+LDFLAGS = -T linker.ld -m elf_x86_64 --oformat binary -Map=kernel.map
 
 QEMU = qemu-system-x86_64
 QEMU_BASE = -drive format=raw,file=os.img -boot c -nodefaults -vga std -smp 1
@@ -14,13 +14,20 @@ all: os.img
 
 os.img: bootloader.bin kernel.bin files.bin
 	dd if=/dev/zero of=os.img bs=512 count=2048
-	dd if=bootloader.bin of=os.img conv=notrunc
-	dd if=kernel.bin of=os.img bs=512 seek=1 conv=notrunc,sync
+	dd if=bootloader.bin of=os.img bs=512 count=1 conv=notrunc
+	dd if=kernel.bin of=os.img bs=512 seek=1 count=49 conv=notrunc,sync
 	dd if=files.bin of=os.img bs=512 seek=50 conv=notrunc
 
 # Automatically generate kernel size constant
+# Automatically generate kernel size constant in SECTORS with safety check
 bootloader_constants.asm: kernel.bin
-	echo "kernel_size dw `stat -c %s kernel.bin`" > $@
+	@BYTES=$$(stat -c %s kernel.bin); \
+	SECTORS=$$(( (BYTES + 511) / 512 )); \
+	if [ $$SECTORS -gt 49 ]; then \
+		echo "CRITICAL ERROR: Kernel size ($$SECTORS sectors) exceeds 49-sector ceiling! Will overwrite files.bin."; \
+		exit 1; \
+	fi; \
+	echo "KERNEL_SECTORS equ $$SECTORS" > $@
 
 bootloader.bin: bootloader.asm bootloader_constants.asm
 	$(AS) -f bin $< -o $@

@@ -1,1 +1,1 @@
-kernel_size dw 10455
+KERNEL_SECTORS equ 19
