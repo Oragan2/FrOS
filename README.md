@@ -1,5 +1,5 @@
 # MeOS
-A custom operating system and kernel made for fun in 32-bits from scrathch
+A custom operating system and kernel made for fun in 64-bits from scrathch
 
 Current feature
 | Feature | Status |
@@ -10,7 +10,10 @@ Current feature
 | Processes | ❌ |
 | Interuptions | ✅ |
 | PCI | 🟠 |
+| Memory | ❌ |
 (Probably missed some)
+
+Currently working on making memory pagging
 
 To compile the OS you'll need : 
 - i686-elf-gcc
