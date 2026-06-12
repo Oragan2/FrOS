@@ -6,6 +6,8 @@
 #include "idt.h"
 #include "pic.h"
 #include "pit.h"
+#include "screen.h"
+#include "mem.h"
 
 extern void irq0_stub();
 
@@ -21,7 +23,10 @@ void kernel_main(void) {
     }
     else print("FRFS not found\n");
     pci_scan();
+    pagingSetup();
     __asm__ volatile("sti"); // enable interrupts
 
+    clear_screen();
+    
     while (1) {__asm__ volatile("hlt");}
 }
