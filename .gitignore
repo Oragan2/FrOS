@@ -63,3 +63,4 @@ dkms.conf
 *.iso
 *.log
 bootloader_constant.asm
+TODO.txt
