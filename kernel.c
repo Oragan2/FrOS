@@ -25,8 +25,6 @@ void kernel_main(void) {
     pci_scan();
     pagingSetup();
     __asm__ volatile("sti"); // enable interrupts
-
-    clear_screen();
-    
+			     
     while (1) {__asm__ volatile("hlt");}
 }

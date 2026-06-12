@@ -37,8 +37,21 @@ int memcheck(void * address, unsigned int size) {
 }
 
 void memset(void* dest, char val, unsigned int size) {
-	for (int i = 0; i < size/8; i += 8)
-		*(char*)(dest+i) = (char)val;
+	uint64_t* p64 = dest;
+	uint64_t patern = (uint8_t)val;
+	patern |= patern << 8;
+	patern |= patern << 16;
+	patern |= patern << 32;
+
+	while (size >= 8) {
+		*p64++ = patern;
+		size -= 8;
+	}
+
+	uint8_t* p8 = (uint8_t*)p64;
+
+	while (size--)
+		*p8++ = (uint8_t)val;
 }
 
 void pagingSetup() {
